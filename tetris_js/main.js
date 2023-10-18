@@ -121,8 +121,10 @@ function draw() {
   context.fillStyle = '#000'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
-  for (let y = 0; y < BOARD_HEIGHT; ++y) {
-    for (let x = 0; x < BOARD_HEIGHT; ++x) {
+  let width = board[0]?.length
+  let height = board.length
+  for (let y = 0; y < height; ++y) {
+    for (let x = 0; x < width; ++x) {
       let value = board[y][x]
       if (value === 1) {
         context.fillStyle = boardSolidStyle
@@ -273,6 +275,21 @@ function solidify() {
 
   newShape()
 }
+
+/////////////////////////////////////////
+
+// document.addEventListener('touchstart', event => {
+//   keysPressed['arrowDown'] = true
+// })
+// document.addEventListener('touchend', event => {
+//   keysPressed['arrowDown'] = false
+// })
+// document.addEventListener('move', event => {
+//   evt.preventDefault();
+//   const touches = evt.changedTouches;
+
+//   if (touches[0].pageX) { }
+// })
 
 document.addEventListener('keyup', event => {
   keysPressed[event.key] = false
