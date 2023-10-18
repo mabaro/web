@@ -6,8 +6,8 @@ const context = canvas.getContext('2d')
 var backgroundMusic = new Audio('tetrisgameboy1-gameboy.mp3');
 
 const BLOCK_SIZE = 20
-const BOARD_WIDTH = 14
-const BOARD_HEIGHT = 30
+const BOARD_WIDTH = 10
+const BOARD_HEIGHT = 20
 
 const boardSolidStyle = 'gray'
 
@@ -17,39 +17,9 @@ canvas.height = BLOCK_SIZE * BOARD_HEIGHT
 context.scale(BLOCK_SIZE, BLOCK_SIZE)
 
 let keysPressed = {}
+const DEFAULT_KEY_DELAY = 100
 
-const board = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-]
+let board = []
 
 const shapeStyles = ["red", "yellow", "green", "blue", "cyan", "violet"]
 const shapes = [
@@ -69,39 +39,48 @@ const shapes = [
   [0, 1, 1, 0]],
   //
   [[0, 0, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 1, 0],
+  [0, 1, 1, 0]],
+  //
+  [[0, 0, 0, 0],
   [0, 1, 0, 0],
   [0, 1, 1, 0],
   [0, 1, 0, 0]],
   //
   [[0, 0, 0, 0],
+  [0, 0, 0, 0],
   [1, 1, 0, 0],
-  [0, 1, 0, 0],
   [0, 1, 1, 0]],
   //
   [[0, 0, 0, 0],
-  [1, 1, 0, 0],
-  [0, 1, 0, 0],
-  [0, 1, 1, 0]],
+  [0, 0, 0, 0],
+  [0, 1, 1, 0],
+  [1, 1, 0, 0]],
+  // //
+  // [[0, 0, 0, 0],
+  // [1, 1, 0, 0],
+  // [0, 1, 0, 0],
+  // [0, 1, 1, 0]],
 ]
 
 const piece = {
   style: 'red',
   position: { x: (BOARD_WIDTH / 2 - 4 / 2), y: 0 },
-  shape: [
-    [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0]
-  ]
+  shape: shapes[0]
 }
 
 
 function clearBoard() {
-  board.forEach((row, y) => {
-    row.forEach((value, x) => {
-      board[y][x] = 0
-    })
-  })
+  board = new Array(BOARD_HEIGHT)
+  for (let y = 0; y < BOARD_HEIGHT; ++y)
+  {
+    let row = new Array(BOARD_WIDTH)
+    board[y] = row
+    for (let x = 0; x < BOARD_WIDTH; ++x) {
+      row[x] = 0
+    }
+  }
 }
 
 let lastUpdateTime = 0
@@ -109,14 +88,16 @@ let dropAccumTime = 0
 let paused = true
 
 let lastKeyTime = 0
+let keyDelay = 0
 
 function update(time = 0) {
   const deltaTime = time - lastUpdateTime
   lastUpdateTime = time
 
   if (!paused) {
-    if (time - lastKeyTime > 1000 / 20) {
+    if (time - lastKeyTime > keyDelay + 1000 / 60) {
       processKeysRepeat()
+      keyDelay = 0
     }
 
     draw()
@@ -131,6 +112,7 @@ function update(time = 0) {
       dropAccumTime = 0
     }
 
+    // setTimeout(function () { update() }, 1000 / 60)
     window.requestAnimationFrame(update)
   }
 }
@@ -139,14 +121,15 @@ function draw() {
   context.fillStyle = '#000'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
-  board.forEach((row, y) => {
-    row.forEach((value, x) => {
+  for (let y = 0; y < BOARD_HEIGHT; ++y) {
+    for (let x = 0; x < BOARD_HEIGHT; ++x) {
+      let value = board[y][x]
       if (value === 1) {
         context.fillStyle = boardSolidStyle
         context.fillRect(x, y, 1, 1)
       }
-    })
-  })
+    }
+  }
 
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -320,10 +303,12 @@ function processKeysRepeat() {
   if (keysPressed['ArrowLeft']) {
     piece.position.x--
     shouldCheckCollision = true
+    keyDelay = DEFAULT_KEY_DELAY
   }
   else if (keysPressed['ArrowRight']) {
     piece.position.x++
     shouldCheckCollision = true
+    keyDelay = DEFAULT_KEY_DELAY
   }
   else if (keysPressed['ArrowDown']) {
     piece.position.y++
@@ -343,8 +328,6 @@ function startGame() {
   clearBoard()
   newShape()
   pauseGame(false)
-
-  board[board.length - 1].forEach((value, x) => { board[board.length - 1][x] = 1 })
 }
 
 function pauseGame(doPause) {
@@ -352,7 +335,10 @@ function pauseGame(doPause) {
   if (doPause)
     backgroundMusic.pause()
   else
+  {
+    backgroundMusic.loop = true
     backgroundMusic.play()
+  }
   update()
 }
 
